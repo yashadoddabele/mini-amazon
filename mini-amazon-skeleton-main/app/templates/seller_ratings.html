@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Seller Reviews and Product Ratings</h1>
+
+<div class="seller-ratings">
+  <h2>Your Seller Ratings</h2>
+  {% for review in anonymous_seller_reviews %}
+    <div class="rating">
+      <p>Rating: {{ review.rating }}/5</p>
+      <p>Review: {{ review.review }}</p>
+      <p>Reviewed by: {{ review.buyer }}</p> 
+    </div>
+  {% endfor %}
+</div>
+
+<div class="product-reviews">
+  <h2>Ratings for Your Products</h2>
+  {% for review in anonymous_product_reviews %}
+    <div class="review">
+      <h3>{{ review.product_name }}</h3>
+      <p>Rating: {{ review.rating }}/5</p>
+      <p>Review: {{ review.review }}</p>
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

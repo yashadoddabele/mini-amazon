@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Mini Amazon</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/example.css') }}">
+    <style>
+        /* Add your custom CSS here if needed */
+
+        /* Dropdown Styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropbtn {
+            background-color: transparent;
+            color: #FFF;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #232F3E;
+            min-width: 160px;
+            z-index: 1;
+            padding: 0; /* Remove padding to eliminate indentation */
+            margin: 0; /* Remove margin to eliminate indentation */
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content a {
+            color: #FFF;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            margin: 0; /* Remove margin to eliminate indentation */
+        }
+
+        .dropdown-content a:hover {
+            background-color: #FF9900;
+        }
+        /* Additional Styles for "Account & Lists" */
+        .account-lists {
+            font-weight: bold;
+            font-size: 16px; /* Adjust the font size as needed */
+            display: flex;
+            align-items: center;
+        }
+
+        .account-lists::after {
+            content: "\25BE"; /* Unicode character for a down-pointing triangle */
+            margin-left: 5px;
+            font-size: 14px; /* Adjust the font size as needed */
+        }
+    </style>
+</head>
+<body>
+    <header class="small-header">
+        <div class="navbar">
+            <div class="logo">
+                <img class="logo-image" src="{{ url_for('static', filename='css/amazon.png') }}" alt="Amazon Logo">
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for products...">
+                <button type="submit">Search</button>
+            </div>
+            <div class="nav-links">
+                {% if current_user.is_authenticated %}
+                    <div class="user-info">
+                        <div class="dropdown">
+                            <button class="dropbtn">
+                                Hello, {{ current_user.firstname }}<br>
+                                <span class="account-lists">Account & Lists</span>
+                            </button>
+                            <div class="dropdown-content">
+                                <a href="{{ url_for('accounts.account') }}">Account</a>
+                                <a href="{{ url_for('purchasehistory.purchasehistory') }}">Past Orders</a>
+                            </div>
+                        </div>
+                        <a href="{{ url_for('cart.get_user_cart') }}">View Cart</a>
+                        <a href="{{ url_for('sellerInventory.inventory') }}">Seller's Inventory</a>
+                        <a href="{{ url_for('index.index') }}">Products</a>
+                        <a href="{{ url_for('users.logout') }}">Log out</a>
+                    </div>
+                {% else %}
+                    <a href="{{ url_for('users.login') }}">Log in</a>
+                    <a href="{{ url_for('index.index') }}">Products</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    <div class="main">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

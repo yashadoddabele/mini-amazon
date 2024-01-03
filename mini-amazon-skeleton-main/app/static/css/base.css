@@ -1,0 +1,136 @@
+body, h1, h2, h3, p, ul, li, button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+body {
+    font-family: Arial, sans-serif;
+}
+.small-header {
+    background-color: #232F3E;
+    color: #FFF;
+    display: flex;
+    align-items: center;
+    height: 100px;
+}
+.navbar {
+    width: 100%;
+    display: flex; /* Make the navbar a flex container */
+    align-items: center;
+}
+.logo-image {
+    max-width: 200px;
+    height: auto;
+}
+.delivery {
+    color: #FFF;
+}
+.delivery a {
+    color: #FFF;
+    font-size: 20px;
+}
+.search-container {
+    display: flex; /* Make it a flex container */
+    align-items: center; /* Center vertically within the container */
+    margin-left: 20px;
+    margin-right: 0;
+}
+.search-bar {
+    display: flex;
+    align-items: center;
+    flex: 1; /* Make the search bar expand to take up available space */
+}
+.search-bar input {
+    width: 1000px; 
+    height: 60px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 20px; 
+    flex: 1;
+}
+.search-bar button {
+    height: 60px;
+    background-color: #FF9900;
+    color: #232F3E;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.nav-links a {
+    color: #FFF;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 20px;
+}
+
+/* Remove margin from the first link within the nav-links container */
+.nav-links a:first-child {
+    margin-left: 0;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropbtn {
+    background-color: transparent;
+    color: #FFF;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #232F3E;
+    min-width: 160px;
+    z-index: 1;
+    padding: 0; /* Remove padding to eliminate indentation */
+    margin: 0; /* Remove margin to eliminate indentation */
+    z-index: 2;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    color: #FFF;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    margin: 0; /* Remove margin to eliminate indentation */
+    z-index: 2;
+}
+
+.dropdown-content a:hover {
+    background-color: #FF9900;
+}
+.account-lists {
+    font-weight: bold;
+    font-size: 16px; 
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    z-index: 2;
+}
+
+.account-lists::after {
+    content: "\25BE"; /* Unicode character for a down-pointing triangle */
+    margin-left: 5px;
+    font-size: 14px; 
+}

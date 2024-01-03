@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="winter"> 
+  <img class="winter-image" src="{{ url_for('static', filename='css/winter_background.png') }}" alt="Winter Image" width="100%">
+  <div class="overlay-text">
+    <a>Shop Best Sellers In</a>
+  </div>
+</div>
+
+<div class="grid-container">
+    {% for category in categories %}
+        <a href="/category?category_input={{ category.id }}" class="grid-item">            <p>{{ category.category_name }}</p>
+          <input type="hidden" name="category_input" value="{{ category_id }}">
+            {% set image_number = category.id %}
+            <img src="{{ url_for('static', filename='css/category_images/' + image_number|string + '.png') }}" alt="Category Image">
+        </a>
+    {% endfor %}
+</div>
+
+<br><br>
+
+<br><br>
+
+<br><br>
+
+<br><br>
+    
+{% endblock %}

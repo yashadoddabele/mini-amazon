@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <h1 class="text-center mb-4">Login</h1>
+
+      <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        
+        <div class="form-group">
+          {{ form.email.label }}
+          {{ form.email(class="form-control", placeholder="Enter your email") }}
+          {% for error in form.email.errors %}
+            <small class="text-danger">{{ error }}</small>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          {{ form.password.label }}
+          {{ form.password(class="form-control", placeholder="Enter your password") }}
+          {% for error in form.password.errors %}
+            <small class="text-danger">{{ error }}</small>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              <ul class="list-unstyled">
+                {% for message in messages %}
+                  <li class="text-success">{{ message }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          {% endwith %}
+        </div>
+
+        <div class="form-group">
+          {{ form.submit(class_="btn btn-primary") }}
+          <a class="btn btn-secondary" href="{{ url_for('users.register') }}" role="button">Register</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+

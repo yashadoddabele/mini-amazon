@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5" style="background-image: url('/static/css/carts_bg.png'); background-size: cover;">
+  <h1 class="mb-4">Seller</h1>
+
+  <div class="seller-info mb-4">
+    <h2>Seller Information</h2>
+    {% if seller_info %}
+      {% for info in seller_info %}
+        <div class="card mb-3">
+          <div class="card-body">
+            <p class="card-text"><strong>Account ID:</strong> {{ info.seller_id }}</p>
+            <p class="card-text"><strong>Name:</strong> {{ info.seller_name }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ info.email }}</p>
+            <p class="card-text"><strong>Address:</strong> {{ info.uaddress }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-danger">Seller not found</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+

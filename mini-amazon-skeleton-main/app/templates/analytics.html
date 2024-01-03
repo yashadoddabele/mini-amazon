@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Analytics Dashboard</h1>
+
+<!-- Inventory Bar Chart -->
+<div>
+    <h2>Inventory Status (Bar Chart)</h2>
+    <canvas id="inventoryBarChart"></canvas>
+</div>
+
+<!-- Inventory Pie Chart Section -->
+<h2>Current Inventory Status (Pie Chart)</h2>
+<div>
+    <canvas id="inventoryPieChart"></canvas>
+</div>
+
+<!-- Pending Order Items Count Bar Chart -->
+<div>
+    <h2>Pending Order Items Count</h2>
+    <canvas id="pendingOrderItemsCountBarChart"></canvas>
+</div>
+
+<!-- Fulfilled Order Items Count Bar Chart -->
+<div>
+    <h2>Fulfilled Order Items Count</h2>
+    <canvas id="fulfilledOrderItemsCountBarChart"></canvas>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const inventoryData = {{ inventory_data | tojson }};
+    const pendingOrderItemsCount = {{ pending_order_items_count | tojson }};
+    const fulfilledOrderItemsCount = {{ fulfilled_order_items_count | tojson }};
+
+    // Generate random colors
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    // Assign a random color to each product for the pie chart
+    const pieChartColors = inventoryData.map(() => getRandomColor());
+
+    // Render Inventory Bar Chart
+    const ctxInventoryBar = document.getElementById('inventoryBarChart').getContext('2d');
+    new Chart(ctxInventoryBar, {
+        type: 'bar',
+        data: {
+            labels: inventoryData.map(data => data.product_name),
+            datasets: [{ label: 'Quantity', data: inventoryData.map(data => data.quantity), backgroundColor: 'rgba(54, 162, 235, 0.5)' }]
+        },
+        options: { scales: { y: { beginAtZero: true } } }
+    });
+
+    // Render Inventory Pie Chart
+    // Inventory Pie Chart
+    const ctxInventoryPie = document.getElementById('inventoryPieChart').getContext('2d');
+    new Chart(ctxInventoryPie, {
+        type: 'pie',
+        data: {
+            labels: inventoryData.map(data => data.product_name),
+            datasets: [{
+                data: inventoryData.map(data => data.quantity),
+                backgroundColor: pieChartColors
+            }]
+        }
+    });
+
+
+
+    // Pending Order Items Count Bar Chart
+    const ctxPendingOrderItems = document.getElementById('pendingOrderItemsCountBarChart').getContext('2d');
+    new Chart(ctxPendingOrderItems, {
+        type: 'bar',
+        data: {
+            labels: pendingOrderItemsCount.map(data => data.product_name),
+            datasets: [{
+                label: 'Total Pending Items',
+                data: pendingOrderItemsCount.map(data => data.total_items),
+                backgroundColor: 'rgba(255, 159, 64, 0.5)'
+            }]
+        },
+        options: { scales: { y: { beginAtZero: true } } }
+    });
+
+    // Fulfilled Order Items Count Bar Chart
+    const ctxFulfilledOrderItems = document.getElementById('fulfilledOrderItemsCountBarChart').getContext('2d');
+    new Chart(ctxFulfilledOrderItems, {
+        type: 'bar',
+        data: {
+            labels: fulfilledOrderItemsCount.map(data => data.product_name),
+            datasets: [{
+                label: 'Total Fulfilled Items',
+                data: fulfilledOrderItemsCount.map(data => data.total_items),
+                backgroundColor: 'rgba(75, 192, 192, 0.5)'
+            }]
+        },
+        options: { scales: { y: { beginAtZero: true } } }
+    });
+});
+    
+</script>
+
+{% endblock %}

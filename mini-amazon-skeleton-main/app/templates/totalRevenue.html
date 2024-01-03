@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Sold Items Data</h1>
+<table id="soldItemsTable">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Quantity Sold</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<canvas id="soldItemsChart"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    window.onload = function() {
+        fetch('/seller/analytics/sold-items-data')
+            .then(response => response.json())
+            .then(data => {
+                let tableContent = '';
+                let labels = [];
+                let quantities = [];
+                data.forEach(item => {
+                    labels.push(item.product_name);
+                    quantities.push(item.quantity_sold);
+                    tableContent += `
+                        <tr>
+                            <td>${item.product_name}</td>
+                            <td>${item.quantity_sold}</td>
+                            <td>$${item.price.toFixed(2)}</td>
+                        </tr>`;
+                });
+                document.getElementById('soldItemsTable').querySelector('tbody').innerHTML = tableContent;
+
+                // Chart
+                const ctx = document.getElementById('soldItemsChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Quantity Sold',
+                            data: quantities,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { scales: { y: { beginAtZero: true } } }
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching sold items data:', error);
+            });
+    };
+</script>
+{% endblock %}

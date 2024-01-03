@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="account-container">
+    <h1 class="account-title">Your Account</h1>
+
+    <!-- Balance Section -->
+    <div class="balance-section">
+        <h2 class="balance-title">Account Balance</h2>
+        <p class="balance-amount">${{ balance }}</p>
+    </div>
+
+    <!-- Add Money Section -->
+    <div class="add-money-section">
+        <h2 class="add-money-title">Add Money to Your Account</h2>
+        <form class="add-money-form" method="POST" action="/add_money">
+            <input class="add-money-input" type="number" name="amount" placeholder="Enter amount to add" required>
+            <button class="add-money-button" type="submit">Add Money</button>
+        </form>
+    </div>
+
+    <!-- Content Container -->
+    <div class="content-container">
+        <div class="content">
+            <h2 class="content-title">Account Information</h2>
+            <p class="account-info"><strong>Email:</strong> {{ current_user.email }}</p>
+            <p class="account-info"><strong>First Name:</strong> {{ current_user.firstname }}</p>
+            <p class="account-info"><strong>Last Name:</strong> {{ current_user.lastname }}</p>
+            <p class="account-info"><strong>Account ID:</strong> {{ current_user.id }}</p>
+            <p class="account-info"><strong>Address:</strong> {{ current_user.uaddress }}</p>
+            <p class="account-info">
+                <strong>Seller:</strong>
+                {% if current_user.is_seller %}
+                    Yes
+                {% else %}
+                    No
+                {% endif %}
+            </p>
+            <a class="update-account-button" href="/update_account" role="button">Update</a>
+        </div>
+
+        <div class="content" id="purchase-history" style="display: none;">
+            <h2 class="content-title">Purchase History</h2>
+        </div>
+        
+        <a class="update-password-button" href="/update_password" role="button">Update Password</a>
+    </div>
+</div>
+
+    <style>
+        .form-checkbox {
+        margin-top: 10px; }
+        
+        .account-container {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .account-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .balance-section, .add-money-section {
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .balance-title, .add-money-title {
+            font-size: 20px;
+            margin-top: 0;
+        }
+
+        .balance-amount {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .add-money-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .add-money-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .add-money-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-money-button:hover {
+            background-color: #0056b3;
+        }
+
+        .content-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .content {
+            width: 100%;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            margin: 10px;
+            text-align: center;
+        }
+
+        .content-title {
+            font-size: 20px;
+            margin-top: 0;
+        }
+
+        .account-info {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .update-account-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .update-account-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+
+{% endblock %}
+
+
+

@@ -1,0 +1,32 @@
+.results_filtering {
+    background-color: #fff;
+    color: #FFF;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* This will distribute the items along the main axis with space on both ends */
+    height: 75px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+.pricesort {
+    margin-left: auto;
+}
+.card-body a {
+    color: #000000;
+    font-size: 24px;
+}
+.card-body p {
+    color: #000000;
+    font-size: 25px;
+    font-weight: bold;
+}
+.card-text {
+    font-size: 1.2em;
+}
+.dollar-sign {
+    font-size: 0.6em;
+    vertical-align: super;
+}
+.decimal {
+    font-size: 0.6em; 
+    vertical-align: super;
+}

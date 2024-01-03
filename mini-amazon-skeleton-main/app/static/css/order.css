@@ -1,0 +1,58 @@
+body {
+    margin: 0;
+	padding: 0;
+    background-image: url(carts_bg.png);
+}
+
+h2 {
+    margin-top:6vh;
+    font-size: 45px;
+    text-align: center;
+    font-style: italic;
+}
+.table-container {
+    max-width: 65%;
+    margin: 0 auto;
+}
+.table-names {
+    font-size: 20px;
+    background-color: #232F3E;
+    color: #f4e9e9;
+    text-align: center;
+    font-style: italic;
+}
+.table-row {
+    color: #333;
+}
+.table-row {
+    background-color: rgb(209, 217, 227);
+}
+.table-row:hover {
+    background-color: #b2c4da !important;
+}
+
+.table-row th {
+    font-weight: bold;
+}
+  
+.item-info, .item-name{
+    text-align: center;
+    font-size: 20px;
+}
+.table-row input {
+    width: 70px;
+}
+
+li, p {
+    text-align: center;
+    font-size: 25px;
+    color: #232F3E;
+}
+p {
+    font-style: italic;
+}
+.links {
+    text-align: center;
+    font-size: 20px;
+    color: #2474d6;
+}

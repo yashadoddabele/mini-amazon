@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="results_filtering"> 
+</div>
+<br></br>
+
+<div class="container">
+  {% if category_id %}
+
+  <form method="get" action="/category">
+    <button type="submit" id="back_to_results">Back To Results</button>
+    <input type="hidden" name="category_input" value="{{ category_id }}">
+  </form> 
+  {% endif %}
+
+  {% if keyword %}
+
+  <form method="get" action="/search_results">
+    <button type="submit" id="back_to_results">Back To Results</button>
+    <input type="hidden" name="search_input" value="{{ keyword }}">
+  </form> 
+  {% endif %}
+  <br></br>
+
+  <div class="row custom-row-spacing">
+    <div class="col-md-3">
+      <img src="{{ url_for('static', filename='css/random_images/' ~ product.id|string ~ '.png') }}" alt="{{ product.name }}" class="img-fluid">
+    </div>
+    <div class="col-md-6">
+      <h1>{{ product.name }}</h1>
+      <br></br>
+      <p class="card-text">
+        <span class="dollar-sign">$</span>{{ product.price|int }}
+        <span class="decimal">{{ ("%.2f"|format(product.price % 1)).split(".")[1] }}</span>
+    </p>
+      <br></br>
+      <p>About this item: {{ product.long_description }}</p>
+      <br></br>
+      <p>Average rating: {{avg_rating }}</p>
+    </div>
+    <div class="col-md-3">
+
+    <h1>Sellers of {{ product.name }}</h1>
+
+    {% if all_sellers %}
+    <table>
+      <thead>
+        <tr>
+          <th>Seller Name</th>
+          <th></th>
+          <th>Stock</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for seller in all_sellers %}
+          <tr>
+            <td>
+              <a class="show-person-button" href='/seller/{{ seller.seller_id }}' role="button">{{ seller.seller_name }}</a>
+            </td>
+            <td>{{ seller.quantity }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>This product is not available right now.</p>
+  {% endif %}
+  
+</table>
+
+    <br></br>
+    <br></br>
+
+    
+    <p>Quantity</p>
+    <form method="post" action="{{ url_for('product_details.product_details', product_id=product_id) }}">
+      <label for="quantity">Enter quantity:</label>
+        <input type="number" name="order_q" id="order_q" required min="1">
+        <input type="hidden" name="product_id" value="{{ product_id }}">
+        <button type="submit">Add to cart</button>
+    </form>
+    <p> {{ message}}</p>
+    <br></br>
+
+    <!-- Product Rating and Review Form -->
+    {% if user_has_ordered_product %}
+    <div class="rating-review-form">
+      <h2>Rate and Review This Product</h2>
+      <form id="product-rating-review-form">
+          <input type="hidden" name="product_id" value="{{ product_id }}">
+          <div class="form-group">
+              <label for="rating">Rating:</label>
+              <select class="form-control" id="rating" name="rating" required>
+                  <option value="1">1 star</option>
+                  <option value="2">2 stars</option>
+                  <option value="3">3 stars</option>
+                  <option value="4">4 stars</option>
+                  <option value="5">5 stars</option>
+              </select>
+          </div>
+          <div class="form-group">
+              <label for="review">Review:</label>
+              <textarea class="form-control" id="review" name="review" rows="3" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit Review</button>
+      </form>
+  </div>
+  {% endif %}
+  
+  <br></br>
+    <!-- Display all reviews for this product -->
+<div class="reviews">
+  <h2>Reviews</h2>
+  {% if reviews %}
+    {% for review in reviews %}
+      <div class="review">
+        <a class="show-person-button" href='/buyer/{{ review.buyer_id }}' role="button">Review by: {{ review.buyer }}</a>
+        <p>{{ review.review }}</p>
+        <p>Rating: {{ review.rating }}</p>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No reviews for this product yet.</p>
+  {% endif %}
+</div>
+
+    <script>
+      document.getElementById('product-rating-review-form').addEventListener('submit', function(e) {
+          e.preventDefault();
+          var formData = new FormData(this);
+          fetch('{{ url_for("product_ratings.rate_product", product_id=product_id) }}', {
+              method: 'POST',
+              body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.message) {
+                  alert('Review submitted successfully');
+                  window.location.reload();
+              } else {
+                  alert('Error submitting review: ' + data.error);
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+              alert('An error occurred: ' + error);
+          });
+      });
+
+        document.getElementById('add-to-cart-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            fetch('{{ url_for("order.place_order") }}', {  
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert('Item added to cart successfully');
+ 
+                } else {
+                    alert('Error adding item to cart: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred: ' + error);
+            });
+        });
+
+  </script>
+
+    </div>
+  </div>
+
+<br></br>
+  <div class="similar-products">
+    <h2>See similar products</h2>
+    <div class="scrolling-container">
+        {% for similar_product in similar_products %}
+            <div class="product-item">
+                <a href="{{ url_for('product_details.product_details', product_id=similar_product.id) }}">
+                    <img src="{{ url_for('static', filename='css/random_images/' ~ similar_product.id|string ~ '.png') }}" alt="{{ similar_product.name }}" class="img-thumbnail">
+                    <p>{{ similar_product.name }}</p>
+                    <p class="card-text">
+                      <span class="dollar-sign">$</span>{{ similar_product.price|int }}
+                      <span class="decimal">{{ ("%.2f"|format(similar_product.price % 1)).split(".")[1] }}</span>
+                  </p>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+  </div>
+  
+  <style>
+    .similar-products {
+        margin-top: 20px;
+    }
+  
+    .scrolling-container {
+        display: flex;
+        overflow-x: auto;
+        gap: 15px;
+        white-space: nowrap;
+    }
+  
+    .product-item {
+        text-align: center;
+        height: 100%;
+    }
+  </style>
+
+<br></br>
+  <div class="similar-products">
+    <h2>See other products in {{ category_name }}</h2>
+    <div class="scrolling-container">
+        {% for other_category_product in other_category_products %}
+            <div class="product-item">
+                <a href="{{ url_for('product_details.product_details', product_id=other_category_product.id) }}">
+                    <img src="{{ url_for('static', filename='css/random_images/' ~ other_category_product.id|string ~ '.png') }}" alt="{{ other_category_products.name }}" class="img-thumbnail">
+                    <p>{{ other_category_product.name }}</p>
+                    <p class="card-text">
+                      <span class="dollar-sign">$</span>{{ other_category_product.price|int }}
+                      <span class="decimal">{{ ("%.2f"|format(other_category_product.price % 1)).split(".")[1] }}</span>
+                  </p>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+  </div>
+  
+  <style>
+    .similar-products {
+        margin-top: 20px;
+    }
+  
+    .scrolling-container {
+        display: flex;
+        overflow-x: auto;
+        gap: 15px;
+        white-space: nowrap;
+    }
+  
+    .product-item {
+        text-align: center;
+        height: 100%;
+    }
+  </style>
+
+</div>
+
+
+
+      <br>
+
+      <br>
+
+      <style>
+        .container {
+          justify-content: space-between;
+        }
+      </style>
+
+
+
+{% endblock %}

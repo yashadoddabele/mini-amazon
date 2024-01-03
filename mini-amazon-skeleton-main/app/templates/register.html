@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h1 class="card-title">Register</h1>
+          <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+              {{ form.firstname.label(class="form-label") }}
+              {{ form.firstname(class="form-control", size=32) }}
+              {% for error in form.firstname.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="form-group">
+              {{ form.lastname.label(class="form-label") }}
+              {{ form.lastname(class="form-control", size=32) }}
+              {% for error in form.lastname.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="form-group">
+              {{ form.email.label(class="form-label") }}
+              {{ form.email(class="form-control", size=64) }}
+              {% for error in form.email.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+              <small class="form-text text-muted">Note: You can use a fake email address for testing.</small>
+            </div>
+            <div class="form-group">
+              {{ form.password.label(class="form-label") }}
+              {{ form.password(class="form-control", size=32) }}
+              {% for error in form.password.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="form-group">
+              {{ form.password2.label(class="form-label") }}
+              {{ form.password2(class="form-control", size=32) }}
+              {% for error in form.password2.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="form-group">
+              {{ form.uaddress.label(class="form-label") }}
+              {{ form.uaddress(class="form-control", size=64) }}
+              {% for error in form.uaddress.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="form-group">
+              {{ form.is_seller(class="form-check-input") }}
+              {{ form.is_seller.label(class="form-check-label") }}
+            </div>
+            <div class="form-group">
+              {{ form.submit(class="btn btn-primary") }}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

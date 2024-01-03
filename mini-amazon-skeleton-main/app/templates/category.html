@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br></br>
+
+    <div class="container">
+        <br></br>
+
+    <form method="get" action="/category">
+        <label for="results_per_page">Results per page:</label>
+        <select name="results_per_page" id="results_per_page" onchange="this.form.submit()">
+            <option value="24" {% if pagination.per_page == 24 %}selected{% endif %}>24</option>
+            <option value="48" {% if pagination.per_page == 48 %}selected{% endif %}>48</option>
+            <option value="64" {% if pagination.per_page == 64 %}selected{% endif %}>64</option>
+        </select>
+
+        <label for="sort_category">Sort by:</label>
+        <select name="sort_category" id="sort_category" onchange="this.form.submit()">
+            <option value="price_asc" {% if session.get('sort_type') == 'price_asc' %}selected{% endif %}>Price (Low to High)</option>
+            <option value="price_desc" {% if session.get('sort_type') == 'price_desc' %}selected{% endif %}>Price (High to Low)</option>
+        </select>
+
+        <input type="hidden" name="category_input" value="{{ category_id }}">
+    </form>
+
+    <br></br>
+
+    <div class="pagination">
+        <form method="get" action="/category">
+            <input type="hidden" name="category_input" value="{{ category_id }}">
+            {% for page_num in pagination.pages %}
+                {% if page_num is not none %}
+                    <button type="submit" name="page" value="{{ page_num }}">{{ page_num }}</button>
+                {% endif %}
+            {% endfor %}
+            {% if pagination.has_prev %}
+                <button type="submit" name="page" value="{{ pagination.prev_num }}">Previous</button>
+            {% endif %}
+            {% if pagination.has_next %}
+                <button type="submit" name="page" value="{{ pagination.next_num }}">Next</button>
+            {% endif %}
+        </form>
+    </div>
+
+        <h1 class="mt-4 mb-4">Results for "{{ category_name }}" Category</h1>
+
+        {% if category_results %}
+        <p>
+            {# Calculate the range of results shown #}
+            {% set start_range = (pagination.per_page * (pagination.page - 1)) + 1 %}
+            {% set end_range = start_range + category_results|length - 1 %}
+
+            {{ start_range }}-{{ end_range }} result(s) of {{ pagination.total }} total results found for "{{ category_name }}"
+                <div class="row">
+                    {% for product in category_results %}
+                        <div class="col-md-12 mb-4">
+                            <div class="row border-bottom pb-3">
+                                <div class="col-md-3">
+                                    <img src="{{ url_for('static', filename='css/random_images/' ~ product.id|string ~ '.png') }}" alt="{{ product.name }}" class="card-img-top">
+                                </div>
+                                <div class="col-md-9">
+                                    <h5><a href="/product_details/{{ product.id }}?category_input={{ category_id }}">{{ product.name }}</a></h5>
+                                    <input type="hidden" name="category_input" value="{{ category_id }}">
+                                    <p class="card-text">
+                                        <span class="dollar-sign">$</span>{{ product.price|int }}
+                                        <span class="decimal">{{ ("%.2f"|format(product.price % 1)).split(".")[1] }}</span>
+                                    </p>
+                                    <p>{{ product.short_description }}</p>
+                                    <p>Average rating: {{ avg_rating.get(product.id) }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="pagination">
+                    <form method="get" action="/category">
+                        <input type="hidden" name="category_input" value="{{ category_id }}">
+                        {% for page_num in pagination.pages %}
+                            {% if page_num is not none %}
+                                <button type="submit" name="page" value="{{ page_num }}">{{ page_num }}</button>
+                            {% endif %}
+                        {% endfor %}
+                        {% if pagination.has_prev %}
+                            <button type="submit" name="page" value="{{ pagination.prev_num }}">Previous</button>
+                        {% endif %}
+                        {% if pagination.has_next %}
+                            <button type="submit" name="page" value="{{ pagination.next_num }}">Next</button>
+                        {% endif %}
+                    </form>
+                </div>
+        {% else %}
+            <p>No results found for "{{ category_name }}"</p>
+        {% endif %}
+    </div>
+{% endblock %}
+

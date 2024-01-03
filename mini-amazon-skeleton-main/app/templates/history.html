@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+<h1 class="mb-4" style="color: #333; font-size: 36px; font-weight: bold; border-bottom: 2px solid #007BFF; padding-bottom: 10px;">Your Amazon Purchase History</h1>
+    <form method="get" action="{{ url_for('purchasehistory.purchasehistory') }}" class="mb-4">
+        <div class="form-group">
+            <label for="filter_type">Filter By Total Price:</label>
+            <select name="filter_type" class="form-control">
+                <option value="all">All</option>
+                <option value="lt10">Less than $10</option>
+                <option value="lt50">Less than $50</option>
+                <option value="lt100">Less than $100</option>
+                <option value="gt100">Greater than $100</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Apply Filters</button>
+    </form>
+
+    <div class="sorting-buttons mb-4">
+        <a href="{{ url_for('purchasehistory.purchasehistory', sort_by='total_price') }}" class="btn btn-secondary">Sort by Total Price (Low to High)</a>
+        <a href="{{ url_for('purchasehistory.purchasehistory', sort_by='total_price_high_to_low') }}" class="btn btn-secondary">Sort by Total Price (High to Low)</a>
+    </div>
+    
+    {% if current_user.is_authenticated %}
+        {% for purchase in purchase_history %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Order Date: {{ purchase.formatted_time_purchased }}</h5>
+                <p class="card-text">Total Amount: ${{ purchase.total_price }}</p>
+                <p class="card-text">Number of Items: {{ purchase.num_items }}</p>
+                <p class="card-text">Fulfilled: {% if purchase.fulfilled %}Yes{% else %}No{% endif %}</p>
+                <a href="{{ url_for('order.get_order', oid=purchase.oid) }}" class="btn btn-primary">View Details</a>
+            </div>
+        </div>
+        {% endfor %}
+        <br></br>
+    
+  <div class="similar-products">
+    <h2>Based on your recent purchase of {{most_recent_product_name}} see similar products</h2>
+    <div class="scrolling-container">
+        {% for similar_product in similar_products %}
+            <div class="product-item">
+                <a href="{{ url_for('product_details.product_details', product_id=similar_product.id) }}">
+                    <img src="{{ url_for('static', filename='css/random_images/' ~ similar_product.id|string ~ '.png') }}" alt="{{ similar_product.name }}" class="img-thumbnail">
+                    <p>{{ similar_product.name }}</p>
+                    <p class="card-text">
+                        <span class="dollar-sign">$</span>{{ similar_product.price|int }}
+                        <span class="decimal">{{ ("%.2f"|format(similar_product.price % 1)).split(".")[1] }}</span>
+                    </p>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+  </div>
+  
+  <style>
+    .similar-products {
+        margin-top: 20px;
+    }
+  
+    .scrolling-container {
+        display: flex;
+        overflow-x: auto;
+        gap: 15px;
+        white-space: nowrap;
+    }
+  
+    .product-item {
+        text-align: center;
+        height: 100%;
+    }
+  </style>
+    {% else %}
+        <p>Please log in to view your purchase history.</p>
+        <a href="{{ url_for('users.login') }}" class="btn btn-primary">Login</a>
+    {% endif %}
+</div>
+{% endblock %}

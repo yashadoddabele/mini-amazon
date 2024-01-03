@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container mt-5" style="background-image: url('/static/css/carts_bg.png'); background-size: cover;">
+    <h1 class="mb-4">{{ "Seller" if buyer_info and buyer_info[0].is_seller else "Buyer" }}</h1>
+
+    <div class="user-info mb-4">
+      <h2>User Information</h2>
+      {% if buyer_info %}
+        {% for info in buyer_info %}
+          <div class="card">
+            <div class="card-body">
+              <p class="card-text"><strong>Account ID:</strong> {{ info.buyer_id }}</p>
+              <p class="card-text"><strong>Name:</strong> {{ info.buyer_name }}</p>
+              {% if info.is_seller %}
+                <p class="card-text"><strong>Email:</strong> {{ info.email }}</p>
+                <p class="card-text"><strong>Address:</strong> {{ info.uaddress }}</p>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-danger">Buyer not found</p>
+      {% endif %}
+    </div>
+
+    <div class="user-reviews">
+      <h2>Reviews</h2>
+      {% if buyer_reviews %}
+        {% for review in buyer_reviews %}
+          <div class="card mb-3">
+            <div class="card-body">
+              <p class="card-text"><strong>Product ID:</strong> {{ review.product_id }}</p>
+              <p class="card-text"><strong>Product Name:</strong> {{ review.product_name }}</p>
+              <p class="card-text"><strong>Rating:</strong> {{ review.rating }}</p>
+              <p class="card-text"><strong>Review:</strong> {{ review.review }}</p>
+              <p class="card-text"><strong>Created At:</strong> {{ review.created_at.strftime('%B %d, %Y') }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>No reviews available</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

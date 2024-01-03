@@ -1,0 +1,209 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+  body {
+      background-color: #f7f7f7;
+      font-family: 'Arial', sans-serif;
+  }
+  h1 {
+      color: #2c3e50;
+  }
+  .btn-primary, .btn-info, .btn-success {
+      margin: 5px;
+  }
+  .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+  }
+  .btn-info {
+      background-color: #17a2b8;
+      border-color: #17a2b8;
+  }
+  .btn-success {
+      background-color: #28a745;
+      border-color: #28a745;
+  }
+  .btn-outline-primary, .btn-outline-danger {
+      margin: 5px;
+  }
+  .btn-outline-primary {
+      border-color: #007bff;
+      color: #007bff;
+  }
+  .btn-outline-danger {
+      border-color: #dc3545;
+      color: #dc3545;
+  }
+  .btn:hover {
+      opacity: 0.85;
+  }
+  .modal-content {
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+  .card {
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .button-style {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 3px #999;
+}
+
+.button-style:hover {background-color: #3e8e41}
+
+.button-style:active {
+    background-color: #3e8e41;
+    box-shadow: 0 2px #666;
+    transform: translateY(2px);
+}
+
+  .table {
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  .thead-dark {
+      background-color: #343a40;
+      color: #fff;
+  }
+  .analytics-section {
+      background-color: #fff;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+</style>
+
+<h1 class="text-center my-4">Your Inventory</h1>
+<h1 class="text-center my-4">
+  <p> Seller ID: {{ current_user.id }}</p>
+</h1>
+
+<div class="d-flex justify-content-center my-2">
+  <a href="{{ url_for('seller_orders.orders') }}" class="btn btn-primary">View Your Orders</a>
+  <button type="button" class="btn btn-info ml-2" data-toggle="modal" data-target="#newProductModal">Add New
+    Product</button>
+</div>
+
+<a href="{{ url_for('analytics.analytics_dashboard') }}" class="btn btn-primary">Analytics Dashboard</a>
+
+
+<div class="modal" id="newProductModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add New Product</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="new-product-form">
+          <div class="form-group">
+            <label for="newProductName">Product Name:</label>
+            <input type="text" id="newProductName" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="newProductPrice">Price:</label>
+            <input type="number" id="newProductPrice" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="newProductAvailable">Available:</label>
+            <select id="newProductAvailable" class="form-control" required>
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="newProductShortDesc">Short Description:</label>
+            <input type="text" id="newProductShortDesc" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="newProductLongDesc">Long Description:</label>
+            <textarea id="newProductLongDesc" class="form-control" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="newProductCategory">Category:</label>
+            <select id="newProductCategory" class="form-control" required>
+              {% for category in categories %}
+              <option value="{{ category.id }}">{{ category.category_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container my-4">
+  <div class="card p-3 shadow-sm">
+    <h2 class="card-title text-center">Add New Inventory Item From Existing Products List</h2>
+    <form id="add-inventory-form" class="my-2">
+      <div class="form-group">
+        <input type="number" id="product-id" class="form-control" placeholder="Product ID" required>
+      </div>
+      <div class="form-group">
+        <input type="number" id="quantity" class="form-control" placeholder="Quantity" required>
+      </div>
+      <div class="text-center">
+        <button type="button" id="add-inventory-btn" class="btn btn-success">Add Product</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<div class="container my-4">
+  <div class="card p-3 shadow-sm">
+    <h2 class="card-title text-center">Your Current Inventory</h2>
+    <table class='table table-hover'>
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Product ID</th>
+          <th scope="col">Product Name</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in inventory_data %}
+        <tr id="inventory-item-{{ item.product_id }}">
+          <td>{{ item.product_id }}</td>
+          <td>{{ item.product_name }}</td>
+          <td>
+            <input type="number" value="{{ item.quantity }}" class="form-control inventory-quantity"
+              id="quantity-{{ item.product_id }}" min="0">
+          </td>
+          <td>
+            <button class="update-btn btn btn-outline-primary" data-product-id="{{ item.product_id }}">Update</button>
+            <button class="delete-btn btn btn-outline-danger" data-product-id="{{ item.product_id }}">Delete</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script src="/static/sellerInventory.js"></script>
+
+{% endblock %}

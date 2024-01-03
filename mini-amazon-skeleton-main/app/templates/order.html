@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/order.css') }}">
+</head>
+
+<body>
+<br><br>
+{% if current_user.is_authenticated %}
+<h2><b>Order Details</b></h2>
+<br><br>
+<div class="table-container">
+<table class='table table-hover table-bordered container'>
+  <thead>
+    <tr class="table-names">
+      <th scope="col">Product Name</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Price</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in items%}
+      <tr id="order-item{{ item.id }}" class="table-row">
+        <th scope="row" class="item-name">{{item.name}}</th>
+        <td class="item-info">{{item.quantity}}</td>
+        <td class="item-info">${{item.price}} (Final)</td>
+        <td class="item-info">{{date}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<br>
+{% if status %}
+      <tr>
+        <td colspan="4">
+          <ul>
+            {% for stat in status %}
+              <li><b>{{ stat }}</b></li>
+            {% endfor %}
+          </ul>
+        </td>
+      </tr>
+{% endif %}
+<br>
+<p><b>Total Price:</b></p>
+<p id="total-price"><b>${{total_price}}</b></p>
+<br><br>
+</body>
+
+<div class="links">
+<a href="{{ url_for('index.index') }}"><b>Return to Shop</b></a>
+<br><br>
+
+{% else %}
+<p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart!</p>
+{% endif %}
+</div>
+
+{% endblock %}

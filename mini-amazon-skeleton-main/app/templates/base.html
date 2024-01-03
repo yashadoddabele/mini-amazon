@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Mini Amazon</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/results.css') }}">
+</head>
+<body>
+    <header class="small-header">
+        <div class="navbar">
+            <div class="logo">
+                <a href="{{ url_for('index.index') }}">
+                    <img class="logo-image" src="{{ url_for('static', filename='css/amazon.png') }}" alt="Amazon Logo">
+                </a>
+            </div>
+            <div class = "delivery">
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('index.index') }}">{{current_user.uaddress}}</a>
+                {% else %}
+                <a href="{{ url_for('index.index') }}">Delivering to Durham 27708</a>
+                {% endif %}
+            </div>
+            <div class="search-container">
+                <div class="dropdown">
+                    <button class="dropbtn">
+                        <span class="account-lists">All</span>
+                    </button>
+                    <div class="dropdown-content">
+                        {% for category in categories %}
+                            <a href="/category?category_input={{ category.id }}">{{ category.category_name }}</a>
+                            <input type="hidden" name="category_input" value="{{ category_id }}">
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="search-bar">
+                    <form method="post" action="/search_results">
+                        <input type="text" name="search_input" placeholder="Search Amazon">
+                        <button type="submit">Search</button>
+                </form>
+                </div>
+            </div>
+
+            <div class="nav-links">
+                {% if current_user.is_authenticated %}
+                    <div class="user-info">
+                        <div class="dropdown">
+                            <button class="dropbtn">
+                                Hello, {{ current_user.firstname }}<br>
+                                <span class="account-lists">Account & Lists</span>
+                            </button>
+                            <div class="dropdown-content">
+                                <a href="{{ url_for('accounts.account') }}">Account</a>
+                                <a href="{{ url_for('purchasehistory.purchasehistory') }}">Past Orders</a>
+                            </div>
+                        </div>
+                        <a href="{{ url_for('cart.get_user_cart') }}">View Cart</a>
+                        {% if current_user.is_seller %}
+                        <a href="{{ url_for('sellerInventory.inventory') }}">Seller's Inventory</a>
+                        {% endif %}
+                        <a href="{{ url_for('users.logout') }}">Log out</a>                        
+                    </div>
+                {% else %}
+                    <div class = "login-link">
+                        <a href="{{ url_for('users.login') }}">Log in</a>
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </header>
+    
+    <div class="main">
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+</html>
