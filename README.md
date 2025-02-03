@@ -1,7 +1,7 @@
 # mini-amazon ecommerce website
 
 ## About
-This was a final group project for my CS316 class on Database Systems. It emulates a typical ecommerce website similar to Amazon's shopping application with all features involving carts, orders, user authorization/creation, products, and inventory. The application was tested on synthetic data with 2,000 products, 2,000 orders, and 100 unique users. It is a fully functional fullstack application with user interaction on the front-end that connects to tested API endpoints on the backend. All relevant website data is stored securely in a custom-designed relational database, which we managed through a Docker container. To maintain the security of customer data, we handled transactions/user registration safely by preventing injection attacks and unauthorized access through cache reroutes.
+This web app emulates a typical ecommerce website similar to Amazon's shopping application with all features involving carts, orders, user authorization/creation, products, and inventory. The application was tested on synthetic data with 2,000 products, 2,000 orders, and 100 unique users. It is a fully functional fullstack application with user interaction on the front-end that connects to tested API endpoints on the backend. All relevant website data is stored securely in a custom-designed relational database, which we managed through a Docker container. To maintain the security of customer data, we handled transactions/user registration safely by preventing injection attacks and unauthorized access through cache reroutes.
 
 My responsibilities involved carts/orders transactions. All parts of the website (Users, Products, Carts/Orders, Seller Inventory/Orders) are fully functional.
 
